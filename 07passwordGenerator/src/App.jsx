@@ -1,86 +1,98 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState  , useEffect } from 'react';
 
 function App() {
-  const [password, setPassword] = useState('password');
+  const [password, setPassword] = useState('');
   const [length, setLength] = useState(8);
-  const [numberAllowed, setNumberAllowed] = useState(false);
-  const [charAllowed, setCharAllowed] = useState(false);
+  const [numberAllow, setNumberAllow] = useState(false);
+  const [characterAllow, setCharacterAllow] = useState(false);
 
-  const passwordGenerator = useCallback(() => {
-    let str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const numbers = "0123456789";
-    const special = "!@#$%^&*()_+{}[]?>/`/-+-";
-    
-    if (numberAllowed) str += numbers;
-    if (charAllowed) str += special;
-    
-    let generatedPassword = "";
+  const PasswordGeneraotr = useCallback(() => {
+    let pass = "";
+    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    if (numberAllow) str += "0123456789";
+    if (characterAllow) str += "~!@#$%^&*()_+}{";
+  
     for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * str.length);
-      generatedPassword += str[randomIndex];
+      let char = Math.floor(Math.random() * str.length);
+      pass += str.charAt(char);
     }
+    setPassword(pass);
+  }, [length, numberAllow, characterAllow]);
+  
+   
+  useEffect ( () => {
+    PasswordGeneraotr() 
+  } , [length , numberAllow , characterAllow ] )
 
-    setPassword(generatedPassword);
-  }, [length, numberAllowed, charAllowed]);
+  const copyToClipboard = () => {
+    window.navigator.clipboard.writeText(password);
+    alert("Password copied to clipboard!");
+  };
+  
+
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-bold text-center text-xl mb-4">Password Generator</h1>
-      <div className="flex gap-2">
-        <input
-          type="text"
-          placeholder="Generated password"
-          value={password}
-          readOnly
-          className="border p-2 w-full"
-        />
-        <button
-          onClick={() => navigator.clipboard.writeText(password)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Copy
-        </button>
-      </div>
+    <div className="min-h-screen w-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-lg">
+        <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6">
+          🔐 Password Generator
+        </h1>
 
-      <div className="mt-4">
-        <label className="block">
+        <div className="flex mb-4 shadow rounded overflow-hidden">
+          <input
+            type="text"
+            readOnly
+            value={password}
+            placeholder="Your Password..."
+            className="flex-grow px-4 py-2 text-white-100 outline-none"
+          />
+          <button
+           onClick={copyToClipboard}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4">
+            Copy
+          </button>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">
+            Password Length: <span className="text-indigo-600 font-semibold">{length}</span>
+          </label>
           <input
             type="range"
-            min={6}
-            max={100}
+            min="4"
+            max="32"
             value={length}
             onChange={(e) => setLength(Number(e.target.value))}
-            className="cursor-pointer"
+            className="w-full accent-indigo-600"
           />
-          <span> Length: {length} </span>
-        </label>
-      </div>
+        </div>
 
-      <div className="mt-2">
-        <label className="mr-4">
+        <div className="flex items-center mb-3">
           <input
             type="checkbox"
-            checked={numberAllowed}
-            onChange={() => setNumberAllowed((prev) => !prev)}
+            id="numbers"
+            checked={numberAllow}
+            onChange={() => setNumberAllow((prev) => !prev)}
+            className="mr-2"
           />
-          Include Numbers
-        </label>
-        <label>
+          <label htmlFor="numbers" className="text-gray-700">Include Numbers</label>
+        </div>
+
+        <div className="flex items-center mb-6">
           <input
             type="checkbox"
-            checked={charAllowed}
-            onChange={() => setCharAllowed((prev) => !prev)}
+            id="characters"
+            checked={characterAllow}
+            onChange={() => setCharacterAllow((prev) => !prev)}
+            className="mr-2"
           />
-          Include Special Characters
-        </label>
-      </div>
+          <label htmlFor="characters" className="text-gray-700">Include Special Characters</label>
+        </div>
 
-      <button
-        onClick={passwordGenerator}
-        className="bg-green-500 text-white px-4 py-2 mt-4 rounded"
-      >
-        Generate Password
-      </button>
+        <button className="w-full bg-indigo-600 text-white py-3 rounded-md text-lg font-semibold hover:bg-indigo-700 transition">
+          Generate Password
+        </button>
+      </div>
     </div>
   );
 }

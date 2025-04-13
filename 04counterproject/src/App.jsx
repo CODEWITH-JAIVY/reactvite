@@ -2,28 +2,34 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+   let [counter ,setcounter ] = useState( 0 )  
+     
+    const addvalue =()=>{
+      if ( counter  < 20 ) {
+         setcounter(counter+1) 
+      }
+    } 
 
-  const addValue = () => {
-    if (count < 20) {
-      setCount(count+1);  
+    const decreaseVAlue = ()=>{
+      if(counter > 0 ) {
+      setcounter(counter-1) 
     }
-  };
-
-  const decrease = () => {
-    if (count > 0) {
-      setCount(count-1); 
-    }
-  };
-
+  }
   return (
     <>
-      <h1>Counter App</h1>
-      <button onClick={addValue}>Add Value {count}</button>
-      <br />
-      <button onClick={decrease}>Decrease {count}</button>
-      <br />
-      <footer>Footer Count: {count}</footer>
+      <h1>Counter Preoject </h1>
+      <p>counter value {counter}</p>
+      <button
+       onClick={addvalue}
+      > coutner increase value {counter}
+       </button>
+       <br />
+       <button 
+        onClick={decreaseVAlue}
+       >
+        counter to decrese {counter}
+       </button>
+
     </>
   );
 }
