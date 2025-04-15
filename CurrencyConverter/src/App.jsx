@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useCurrencyInfo from './hooks/useCurrencyInfo';
+import useCurrencyInfo from './Hooks/useCurrencyInfo';
 
 function App() {
   const [amount, setAmount] = useState(1);
